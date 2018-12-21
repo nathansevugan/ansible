@@ -1,0 +1,12 @@
+#- hosts: web
+#  become: yes
+#  become_user: root
+#  roles:
+#    - nginx
+- hosts: tomcat
+  become: yes
+  become_user: root
+  roles:
+    - hashbangcode.tomcat
+
+

@@ -1,0 +1,76 @@
+- name: upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: "checking my login"
+  shell: whoami
+  register: shell_result
+- debug:
+   var: shell_result.stdout_lines
+
+#- name: "rename default bash rc"
+#  shell: mv /home/vagrant/.bashrc /home/vagrant/.bashrc_backup
+#  args:
+#    creates: /home/vagrant/.bashrc_backup
+#
+#- name: "rename bash profile"
+#  shell: mv /home/vagrant/.bash_profile /home/vagrant/.bash_profile_backup
+#  args:
+#    creates: /home/vagrant/.bash_profile_backup
+#
+#- name: "rename bash profile"
+#  shell: mv /home/vagrant/.bash_logout /home/vagrant/.bash_logout_backup
+#  args:
+#    creates: /home/vagrant/.bash_logout_backup
+
+- name: "adding bash.bashrc"
+  copy:
+    src: "../files/bash.bashrc"
+    dest: "/home/vagrant/.bashrc"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install yum packages
+  yum:
+    name: "{{ nginx_yum_items  }}"
+    state: present
+  tags: [nginx]
+
+- name: install vim enhanced
+  yum:
+    name: vim-enhanced
+    state: present
+  tags: [common]
+#- name: install epel
+#  yum:
+#    name: epel-release
+#    state: present
+#  become: yes
+#  become_user: root
+#  tags: [nginx]
+#
+#- name: install nginx
+#  yum:
+#    name: nginx
+#    state: present
+#  become: yes
+#  become_user: root
+#  tags: [nginx]
+
+- name: start nginx service
+  service:
+    name: "{{ nginx_service_name }}"
+    state: started
+  tags: [nginx, status]
+
+- name: copy nginx configuration file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  notify: restart nginx
+  tags: [nginx, config]

@@ -1,0 +1,5 @@
+nginx_port: 8081
+nginx_service_name: nginx
+nginx_yum_items:
+  - epel-release
+  - nginx

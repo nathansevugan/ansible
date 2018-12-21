@@ -1,0 +1,12 @@
+#- hosts: web
+#  become: yes
+#  become_user: root
+#  roles:
+#    - nginx
+- hosts: apache2
+  become: yes
+  become_user: root
+  roles:
+    - apacheserver
+
+

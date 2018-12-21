@@ -1,0 +1,6 @@
+---
+- import_tasks: debian_tomcat.yml
+  when: ansible_os_family == "Debian"
+
+- import_tasks: redhat_tomcat.yml
+  when: ansible_os_family == "RedHat"

@@ -1,0 +1,12 @@
+- name: installing apache server
+  apt: name={{item}}
+  with_items:
+    - apache2
+
+- name: enabling proxy http
+  apache2_module: name=proxy_http
+
+- name: enabling proxy conf
+  template: src=../files/proxy.conf dest=/etc/apache2/conf-available owner=root group=root mode=0644
+  notify:
+    proxy-conf-enabled
